@@ -19,21 +19,30 @@ public class Main {
         String input = readUserInput();
         System.out.println();
 
-        int inputCheckDigit = Integer.parseInt(input.substring(input.length()-1));
-        boolean isValid = validateCreditCardNumber(input, inputCheckDigit);
+        if (input != null) {
+            if (isNumeric(input) && isValidLength(input, 16)) {
+                int inputCheckDigit = Integer.parseInt(input.substring(input.length()-1));
+                boolean isValid = validateCheckDigit(input, inputCheckDigit);
 
-        System.out.println("Input: " + input.substring(0, input.length()-1) + " " + inputCheckDigit);
-        System.out.println("Provided: " + inputCheckDigit);
-        System.out.println("Expected: " + expectedDigit);
-        System.out.println("Checksum: " + isValid);
-        if (isValid)
-            System.out.println("Digits: " + input.length() + " (credit card)");
-        else
-            System.out.println("Digits: " + input.length() + " (not a credit card)");
+                // Output
+                System.out.println("Input: " + input.substring(0, input.length()-1) + " " + inputCheckDigit);
+                System.out.println("Provided: " + inputCheckDigit);
+                System.out.println("Expected: " + expectedDigit);
+                System.out.println("Checksum: " + isValid);
+                if (isValid)
+                    System.out.println("Digits: " + input.length() + " (credit card)");
+                else
+                    System.out.println("Digits: " + input.length() + " (not a credit card)");
+            } else {
+                System.out.println("A credit card number consists of 16 numbers you silly goose. Try again.");
+            }
+        } else {
+            System.out.println("You can't just leave it blank!");
+        }
     }
 
     // Returns true if given card number is valid
-    static boolean validateCreditCardNumber(String cardNo, int inputCheckDigit) {
+    static boolean validateCheckDigit(String cardNo, int inputCheckDigit) {
         // Convert input to int
         int[] creditCardInt = new int[cardNo.length()];
         for (int i = 0; i < cardNo.length(); i++) {
@@ -58,15 +67,29 @@ public class Main {
         expectedDigit = (total * 9) % 10;
 
         // check if input digit is same as % of total
-        if (inputCheckDigit == expectedDigit) {
-            return true;
-        }
-        else {
-
-            return false;
-        }
+        return inputCheckDigit == expectedDigit;
     }
 
+    //  returns true if the input is the specific length
+    public static boolean isValidLength(String input, int length) {
+        return input.length() == length;
+    }
+
+    // returns true if all the chars in a string is numbers
+    public static boolean isNumeric(String input) {
+        char[] chars = input.toCharArray();
+        boolean isNumeric = false;
+
+        for (char c: chars) {
+            if (Character.isDigit(c))
+            {
+                isNumeric = true;
+            } else {
+                return false;
+            }
+        }
+        return isNumeric;
+    }
 
     public static String readUserInput() {
         try {
